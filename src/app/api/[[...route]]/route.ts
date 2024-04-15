@@ -3,6 +3,8 @@ import {Hono} from 'hono'
 import { env } from 'hono/adapter';
 import { handle } from 'hono/vercel';
 import { cors } from 'hono/cors'
+import { PrismaClient } from '@prisma/client/edge'
+import { withAccelerate } from '@prisma/extension-accelerate'
 
 export const runtime = 'edge'
 
@@ -12,6 +14,7 @@ app.use('/*', cors());
 type EnvConfig = {
     REDIS_TOKEN : string;
     REDIS_URL : string;
+    DATABASE_URL : string;
 }
 
 app.get('/search' , async (c) => {
@@ -59,6 +62,55 @@ app.get('/search' , async (c) => {
     
         return c.json({
             data: res,
+            time: end - start
+        } , {status: 200});
+
+    } catch (error:any) {
+        return c.json({error: error},{status: 500});
+    }
+})
+
+app.get('/search/psql' , async (c) => {
+
+    try {
+
+        const {DATABASE_URL} = env<EnvConfig>(c);
+    
+        const prisma = new PrismaClient({
+            datasourceUrl: DATABASE_URL,
+        }).$extends(withAccelerate())
+
+        const start = performance.now();
+    
+        const term = c.req.query('t')?.toString();
+        console.log(term);
+    
+        if(!term)
+            {
+                return c.json({message: "Search Query Is Empty"},{status: 400});
+            }
+
+        const res = await prisma.terms.findMany({
+            where: {
+              name: {
+                startsWith: term
+              },
+            },
+            select: {
+                name: true
+            },
+            take: 5,
+            cacheStrategy: { swr: 300, ttl: 3600 }
+          });
+        
+        console.log(res)
+        
+        const end = performance.now();
+
+        const formattedRes = res.map(item => item.name);
+    
+        return c.json({
+            data: formattedRes,
             time: end - start
         } , {status: 200});
 
