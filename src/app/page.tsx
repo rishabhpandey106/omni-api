@@ -1,9 +1,9 @@
 'use client'
 
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import OuterLayoutRouter from "next/dist/client/components/layout-router";
-import Link from "next/link";
+import { BackgroundGradientAnimation  } from "../components/ui/background-gradient-animation";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 
 
 export default function Home() {
@@ -43,9 +43,10 @@ export default function Home() {
   },[input , active])
 
   return (
-    <main className="h-screen w-screen example">
+    <BackgroundGradientAnimation>
+    <main className="h-screen w-screen">
       <div className="flex flex-col items-center gap-4 pt-40">
-          <h1 className="text-zinc-300 font-bold text-4xl">⚡ Omni-Api ⚡</h1>
+        <Link className="cursor-pointer" href="https://github.com/rishabhpandey106/omni-api"><h1 className="text-zinc-300 font-bold text-4xl from-white/80 to-white/20">⚡ Omni-Api ⚡</h1></Link>
           <h2 className="text-zinc-400 font-semibold text-center text-sm max-w-prose">Speeding Up Your Development Workflow<br/> Speed in millisecond(S) </h2>
           <div className="max-w-md w-full">
             <Command>
@@ -102,6 +103,12 @@ export default function Home() {
         </div>
         {active === 'psql' ? <div className="items-center"><p className="text-zinc-500 border-b bg-gray-blue-100">*In PostgreSQl, first index should be Capital. Ex- Ant , Lion</p></div> : ""}
       </div> 
+      <footer className="sticky bottom-0 mt-80 bg-white rounded-t-lg shadow dark:bg-gray-900 m-4 md:flex md:items-center md:justify-between flex">
+          <div className="w-full max-w-screen-xl mx-auto p-4 md:py-4">
+              <span className="block text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2024 <a href="https://github.com/rishabhpandey106/omni-api" className="hover:underline">OmniAPI™</a>. All Rights Reserved.</span>
+          </div>
+      </footer>
     </main>
+    </BackgroundGradientAnimation>
   );
 }
