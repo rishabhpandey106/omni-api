@@ -22,7 +22,7 @@ Omni API is a project designed to showcase the speed and efficiency of a very fa
 - Upstash
 ## Installation
 
-1. Clone the repository: `git clone https://github.com/your-username/omni-api.git`
+1. Clone the repository: `https://github.com/rishabhpandey106/omni-api.git`
 2. Navigate to the project directory: `cd omni-api`
 3. Install dependencies: `npm install`
 4. Set up environment variables: Create a `.env` file and provide the required values.
